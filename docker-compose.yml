@@ -2,6 +2,6 @@ version: "3.7"
 
 services:  
   whoami:
-    image: sixeyed/whoami:24.01
+    image: sixeyed/whoami:21.04
     build:
       context: .
