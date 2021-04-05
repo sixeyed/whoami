@@ -1,0 +1,7 @@
+version: "3.7"
+
+services:  
+  whoami:
+    image: sixeyed/whoami:24.01
+    build:
+      context: .

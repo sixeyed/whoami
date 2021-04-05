@@ -33,6 +33,7 @@ var (
 	key  string
 	port string
 	name string
+	mode string
 )
 
 func init() {
@@ -40,6 +41,7 @@ func init() {
 	flag.StringVar(&key, "key", "", "give me a key")
 	flag.StringVar(&port, "port", "80", "give me a port number")
 	flag.StringVar(&name, "name", os.Getenv("WHOAMI_NAME"), "give me a name")
+	flag.StringVar(&mode, "mode", os.Getenv("WHOAMI_MODE"), "set mode: q=quiet")
 }
 
 var upgrader = websocket.Upgrader{
@@ -172,8 +174,14 @@ func whoamiHandler(w http.ResponseWriter, req *http.Request) {
 			case *net.IPAddr:
 				ip = v.IP
 			}
-			_, _ = fmt.Fprintln(w, "IP:", ip)
+			if !ip.IsLoopback() {
+				_, _ = fmt.Fprintln(w, "IP:", ip)
+			}
 		}
+	}
+
+	if (mode == "q") {
+		return
 	}
 
 	_, _ = fmt.Fprintln(w, "RemoteAddr:", req.RemoteAddr)
