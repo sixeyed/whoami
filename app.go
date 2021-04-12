@@ -146,6 +146,13 @@ func dataHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func whoamiHandler(w http.ResponseWriter, req *http.Request) {
+	mutexHealthState.RLock()
+	defer mutexHealthState.RUnlock()
+	if currentHealthState.StatusCode != 200 {
+		w.WriteHeader(currentHealthState.StatusCode)
+		return
+	}
+
 	u, _ := url.Parse(req.URL.String())
 	wait := u.Query().Get("wait")
 	if len(wait) > 0 {
